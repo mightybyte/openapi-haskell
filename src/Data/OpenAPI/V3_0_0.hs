@@ -47,17 +47,14 @@ module Data.OpenAPI.V3_0_0 (getAPIKeySecuritySchemeDescription, setAPIKeySecurit
  getComponentsSchemas, setComponentsSchemas,
  getReferenceX, setReferenceX,
  PathItem(..),
- getAuthorizationCodeOAuthFlowTokenUrl, setAuthorizationCodeOAuthFlowTokenUrl,
  getSchemaExternalDocs, setSchemaExternalDocs,
  getLinkDescription, setLinkDescription,
  getPathItemParameters, setPathItemParameters,
- getAuthorizationCodeOAuthFlowX, setAuthorizationCodeOAuthFlowX,
  getSchemaReadOnly, setSchemaReadOnly,
  Parameter(..),
  getOpenAPIObjectServers, setOpenAPIObjectServers,
  eitherSecuritySchemaHTTPSS,
  Discriminator(..),
- getAuthorizationCodeOAuthFlowScopes, setAuthorizationCodeOAuthFlowScopes,
  getOAuthFlowsImplicit, setOAuthFlowsImplicit,
  getSchemaAdditionalProperties, setSchemaAdditionalProperties,
  getLinkRequestBody, setLinkRequestBody,
@@ -231,8 +228,6 @@ module Data.OpenAPI.V3_0_0 (getAPIKeySecuritySchemeDescription, setAPIKeySecurit
  getSchemaDeprecated, setSchemaDeprecated,
  getEncodingStyle, setEncodingStyle,
  getParameterName, setParameterName,
- getAuthorizationCodeOAuthFlowRefreshUrl, setAuthorizationCodeOAuthFlowRefreshUrl,
- getAuthorizationCodeOAuthFlowAuthorizationUrl, setAuthorizationCodeOAuthFlowAuthorizationUrl,
  getLicenseUrl, setLicenseUrl,
  getOpenAPIObjectOpenapi, setOpenAPIObjectOpenapi,
  getSchemaType, setSchemaType,
@@ -2346,45 +2341,21 @@ instance FromJSON ClientCredentialsFlow where
     <*> (pure (xify v))
 
 -- |AuthorizationCodeOAuthFlow tokenUrl authorizationUrl refreshUrl scopes x
-data AuthorizationCodeOAuthFlow = AuthorizationCodeOAuthFlow {_authorizationCodeOAuthFlow_tokenUrl :: Text, _authorizationCodeOAuthFlow_authorizationUrl :: Text, _authorizationCodeOAuthFlow_refreshUrl :: (Maybe Text), _authorizationCodeOAuthFlow_scopes :: (Maybe (HashMap Text Text)), _authorizationCodeOAuthFlow_x :: (Maybe (HashMap Text Value)) } deriving (Eq)
-
-getAuthorizationCodeOAuthFlowTokenUrl :: AuthorizationCodeOAuthFlow -> Text
-getAuthorizationCodeOAuthFlowTokenUrl = _authorizationCodeOAuthFlow_tokenUrl
-
-getAuthorizationCodeOAuthFlowAuthorizationUrl :: AuthorizationCodeOAuthFlow -> Text
-getAuthorizationCodeOAuthFlowAuthorizationUrl = _authorizationCodeOAuthFlow_authorizationUrl
-
-getAuthorizationCodeOAuthFlowRefreshUrl :: AuthorizationCodeOAuthFlow -> Maybe Text
-getAuthorizationCodeOAuthFlowRefreshUrl = _authorizationCodeOAuthFlow_refreshUrl
-
-getAuthorizationCodeOAuthFlowScopes :: AuthorizationCodeOAuthFlow -> Maybe (HashMap Text Text)
-getAuthorizationCodeOAuthFlowScopes = _authorizationCodeOAuthFlow_scopes
-
-getAuthorizationCodeOAuthFlowX :: AuthorizationCodeOAuthFlow -> Maybe (HashMap Text Value)
-getAuthorizationCodeOAuthFlowX = _authorizationCodeOAuthFlow_x
-
-setAuthorizationCodeOAuthFlowTokenUrl :: AuthorizationCodeOAuthFlow -> Text -> AuthorizationCodeOAuthFlow
-setAuthorizationCodeOAuthFlowTokenUrl _old_ _new_ = _old_ { _authorizationCodeOAuthFlow_tokenUrl = _new_ }
-
-setAuthorizationCodeOAuthFlowAuthorizationUrl :: AuthorizationCodeOAuthFlow -> Text -> AuthorizationCodeOAuthFlow
-setAuthorizationCodeOAuthFlowAuthorizationUrl _old_ _new_ = _old_ { _authorizationCodeOAuthFlow_authorizationUrl = _new_ }
-
-setAuthorizationCodeOAuthFlowRefreshUrl :: AuthorizationCodeOAuthFlow -> Maybe Text -> AuthorizationCodeOAuthFlow
-setAuthorizationCodeOAuthFlowRefreshUrl _old_ _new_ = _old_ { _authorizationCodeOAuthFlow_refreshUrl = _new_ }
-
-setAuthorizationCodeOAuthFlowScopes :: AuthorizationCodeOAuthFlow -> Maybe (HashMap Text Text) -> AuthorizationCodeOAuthFlow
-setAuthorizationCodeOAuthFlowScopes _old_ _new_ = _old_ { _authorizationCodeOAuthFlow_scopes = _new_ }
-
-setAuthorizationCodeOAuthFlowX :: AuthorizationCodeOAuthFlow -> Maybe (HashMap Text Value) -> AuthorizationCodeOAuthFlow
-setAuthorizationCodeOAuthFlowX _old_ _new_ = _old_ { _authorizationCodeOAuthFlow_x = _new_ }
-
-
-instance Show AuthorizationCodeOAuthFlow where
-  show (AuthorizationCodeOAuthFlow _tokenUrl _authorizationUrl _refreshUrl _scopes _x) = show (pack "AuthorizationCodeOAuthFlow" <> pack "(" <> intercalate ", " (P.filter (not . DT.null) [pack ("tokenUrl = " <> show _tokenUrl), pack ("authorizationUrl = " <> show _authorizationUrl), maybe "" (\x -> pack ("refreshUrl = Just " <> show x)) _refreshUrl, maybe "" (\x -> pack ("scopes = Just " <> show x)) _scopes, maybe "" (\x -> pack ("x = Just " <> show x)) _x]) <> pack ")")
+data AuthorizationCodeOAuthFlow = AuthorizationCodeOAuthFlow
+  { _authorizationCodeOAuthFlow_tokenUrl :: Text
+  , _authorizationCodeOAuthFlow_authorizationUrl :: Text
+  , _authorizationCodeOAuthFlow_refreshUrl :: (Maybe Text)
+  , _authorizationCodeOAuthFlow_scopes :: (Maybe (HashMap Text Text))
+  , _authorizationCodeOAuthFlow_x :: (Maybe (HashMap Text Value))
+  } deriving (Eq,Ord,Show)
 
 instance ToJSON AuthorizationCodeOAuthFlow where
-  toJSON (AuthorizationCodeOAuthFlow _tokenUrl _authorizationUrl _refreshUrl _scopes _x) =
-    object $ ["tokenUrl" .= _tokenUrl] ++ ["authorizationUrl" .= _authorizationUrl] ++ (maybe [] (\x -> ["refreshUrl" .= x]) _refreshUrl) ++ (maybe [] (\x -> ["scopes" .= x]) _scopes) ++ (maybe [] (HM.toList . (HM.map toJSON)) _x)
+  toJSON (AuthorizationCodeOAuthFlow _tokenUrl _authorizationUrl _refreshUrl _scopes _x) = object $
+    [ "tokenUrl" .= _tokenUrl
+    , "authorizationUrl" .= _authorizationUrl
+    ] ++ (maybe [] (\x -> ["refreshUrl" .= x]) _refreshUrl)
+      ++ (maybe [] (\x -> ["scopes" .= x]) _scopes)
+      ++ (maybe [] (HM.toList . (HM.map toJSON)) _x)
 
 instance FromJSON AuthorizationCodeOAuthFlow where
   parseJSON = withObject "AuthorizationCodeOAuthFlow" $ \v -> AuthorizationCodeOAuthFlow
